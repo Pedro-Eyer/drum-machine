@@ -13,6 +13,17 @@ const drumPads = [
   { key: "C", sound: "Closed-HH", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3" },
 ]
 function App() {
+  
+  // Função para tocar o som ao pressionar a tecla
+  const playSound = (key) => {
+    const audio = document.getElementById(key);
+    if (audio) {
+      document.getElementById(key);
+      audio.currentTime = 0; //Reinicia o áudio
+      audio.play();
+    } 
+  };
+
   return (
     <div id="drum-machine">
       {/* Contêiner principal */}
