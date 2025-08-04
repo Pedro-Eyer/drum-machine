@@ -31,9 +31,10 @@ function App() {
   const [volume, setVolume] = useState(1);
   const [power, setPower] = useState(true);
   const [currentBank, setCurrentBank] = useState(bankOne);
+  const [darkMode, setDarkMode] = useState(true); // Tema começa escuro
 
   const playSound = (key) => {
-    if (!power) return; // Não toca se desligado
+    if (!power) return;
 
     const audio = document.getElementById(key);
     if (audio) {
@@ -83,8 +84,12 @@ function App() {
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
+
   return (
-    <div id="drum-machine">
+    <div id="drum-machine" className={darkMode ? "dark" : "light"}>
       <div id="display">{display}</div>
 
       <div className="controls">
@@ -94,6 +99,10 @@ function App() {
 
         <button onClick={toggleBank} disabled={!power}>
           Change Bank
+        </button>
+
+        <button onClick={toggleDarkMode}>
+          Tema: {darkMode ? "Escuro" : "Claro"}
         </button>
       </div>
 
