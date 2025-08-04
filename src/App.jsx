@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 
 const drumPads = [
@@ -11,34 +11,50 @@ const drumPads = [
   { key: "Z", sound: "Kick-n'-Hat", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3" },
   { key: "X", sound: "Kick", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3" },
   { key: "C", sound: "Closed-HH", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3" },
-]
+];
+
 function App() {
-  
-  // Função para tocar o som ao pressionar a tecla
+  const [display, setDisplay] = useState("Pressione um botão");
+
   const playSound = (key) => {
     const audio = document.getElementById(key);
     if (audio) {
-      audio.currentTime = 0; //Reinicia o áudio
+      audio.currentTime = 0;
       audio.play();
-    } 
+
+      const pad = drumPads.find(p => p.key === key);
+      if (pad) {
+        setDisplay(pad.sound);
+      }
+    }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.key.toUpperCase();
+      const padExists = drumPads.some(pad => pad.key === key);
+      if (padExists) {
+        playSound(key);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <div id="drum-machine">
-      {/* Contêiner principal */}
-      <div id="display">
-        {/* Este será o display onde mostraremos o nome do som tocado */}
-        Pressione um botão
-      </div>
-
-      {/* Botões de tambores */}
+      <div id="display">{display}</div>
       <div className="drum-pads">
         {drumPads.map((pad) => (
           <div 
-          key={pad.key}
-          id={pad.sound} 
-          className="drum-pad"
-          onClick={() => playSound(pad.key)}>
+            key={pad.key}
+            id={pad.sound} 
+            className="drum-pad"
+            onClick={() => playSound(pad.key)}
+          >
             {pad.key}
             <audio className="clip" id={pad.key} src={pad.url} preload="auto" ></audio>
           </div>
