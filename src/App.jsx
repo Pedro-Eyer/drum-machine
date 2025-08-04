@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-
 const drumPads = [
   { key: "Q", sound: "Heater 1", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3" },
   { key: "W", sound: "Heater 2", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3" },
@@ -17,14 +16,15 @@ const drumPads = [
 function App() {
   const [display, setDisplay] = useState("Pressione um botão");
   const [activePad, setActivePad] = useState(null);
-
+  const [volume, setVolume] = useState(1);
 
   const playSound = (key) => {
     const audio = document.getElementById(key);
     if (audio) {
       audio.currentTime = 0;
+      audio.volume = volume;
       audio.play();
-  
+
       const pad = drumPads.find(p => p.key === key);
       if (pad) {
         setDisplay(pad.sound);
@@ -48,11 +48,24 @@ function App() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [volume]);
 
   return (
     <div id="drum-machine">
       <div id="display">{display}</div>
+
+      <div className="volume-slider">
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.01" 
+          value={volume} 
+          onChange={e => setVolume(parseFloat(e.target.value))} 
+        />
+        <p>Volume: {Math.round(volume * 100)}%</p>
+      </div>
+
       <div className="drum-pads">
         {drumPads.map((pad) => (
           <div 
@@ -62,7 +75,7 @@ function App() {
             onClick={() => playSound(pad.key)}
           >
             {pad.key}
-            <audio className="clip" id={pad.key} src={pad.url} preload="auto" ></audio>
+            <audio className="clip" id={pad.key} src={pad.url} preload="auto"></audio>
           </div>
         ))}
       </div>
