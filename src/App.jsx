@@ -18,7 +18,6 @@ function App() {
   const playSound = (key) => {
     const audio = document.getElementById(key);
     if (audio) {
-      document.getElementById(key);
       audio.currentTime = 0; //Reinicia o áudio
       audio.play();
     } 
@@ -35,9 +34,13 @@ function App() {
       {/* Botões de tambores */}
       <div className="drum-pads">
         {drumPads.map((pad) => (
-          <div key={pad.key} id={pad.sound} className="drum-pad">
+          <div 
+          key={pad.key}
+          id={pad.sound} 
+          className="drum-pad"
+          onClick={() => playSound(pad.key)}>
             {pad.key}
-            <audio className="clip" id={pad.key} src={pad.url}></audio>
+            <audio className="clip" id={pad.key} src={pad.url} preload="auto" ></audio>
           </div>
         ))}
       </div>
