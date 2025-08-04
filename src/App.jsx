@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+
 const drumPads = [
   { key: "Q", sound: "Heater 1", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3" },
   { key: "W", sound: "Heater 2", url: "https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3" },
@@ -15,16 +16,21 @@ const drumPads = [
 
 function App() {
   const [display, setDisplay] = useState("Pressione um botão");
+  const [activePad, setActivePad] = useState(null);
+
 
   const playSound = (key) => {
     const audio = document.getElementById(key);
     if (audio) {
       audio.currentTime = 0;
       audio.play();
-
+  
       const pad = drumPads.find(p => p.key === key);
       if (pad) {
         setDisplay(pad.sound);
+        setActivePad(key);
+
+        setTimeout(() => setActivePad(null), 150);
       }
     }
   };
@@ -52,7 +58,7 @@ function App() {
           <div 
             key={pad.key}
             id={pad.sound} 
-            className="drum-pad"
+            className={`drum-pad ${activePad === pad.key ? "active" : ""}`}
             onClick={() => playSound(pad.key)}
           >
             {pad.key}
