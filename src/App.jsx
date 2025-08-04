@@ -150,6 +150,9 @@ function App() {
           </div>
         ))}
       </div>
+      <footer style={{ textAlign: "center", marginTop: "20px", color: "#888" }}>
+      By Dev Eyer
+    </footer>
     </div>
   );
 }
