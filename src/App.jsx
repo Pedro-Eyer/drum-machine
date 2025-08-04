@@ -31,7 +31,7 @@ function App() {
   const [volume, setVolume] = useState(1);
   const [power, setPower] = useState(true);
   const [currentBank, setCurrentBank] = useState(bankOne);
-  const [darkMode, setDarkMode] = useState(true); // Tema começa escuro
+  const [darkMode, setDarkMode] = useState(true);
 
   const playSound = (key) => {
     if (!power) return;
@@ -69,8 +69,7 @@ function App() {
 
   const togglePower = () => {
     setPower(!power);
-    if (power) setDisplay("Power Off");
-    else setDisplay("Power On");
+    setDisplay(power ? "Power Off" : "Power On");
   };
 
   const toggleBank = () => {
@@ -93,15 +92,25 @@ function App() {
       <div id="display">{display}</div>
 
       <div className="controls">
-        <button onClick={togglePower}>
+        <button
+          onClick={togglePower}
+          aria-label="Ligar ou desligar bateria"
+        >
           Power: {power ? "On" : "Off"}
         </button>
 
-        <button onClick={toggleBank} disabled={!power}>
+        <button
+          onClick={toggleBank}
+          disabled={!power}
+          aria-label="Mudar banco de sons"
+        >
           Change Bank
         </button>
 
-        <button onClick={toggleDarkMode}>
+        <button
+          onClick={toggleDarkMode}
+          aria-label="Alternar tema claro e escuro"
+        >
           Tema: {darkMode ? "Escuro" : "Claro"}
         </button>
       </div>
@@ -115,6 +124,7 @@ function App() {
           value={volume}
           onChange={(e) => setVolume(parseFloat(e.target.value))}
           disabled={!power}
+          aria-label="Controle de volume"
         />
         <p>Volume: {Math.round(volume * 100)}%</p>
       </div>
@@ -126,6 +136,14 @@ function App() {
             id={pad.sound}
             className={`drum-pad ${activePad === pad.key ? "active" : ""} ${!power ? "disabled" : ""}`}
             onClick={() => playSound(pad.key)}
+            tabIndex={power ? 0 : -1}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                playSound(pad.key);
+              }
+            }}
+            aria-label={`Tocar som ${pad.sound} pela tecla ${pad.key}`}
+            role="button"
           >
             {pad.key}
             <audio className="clip" id={pad.key} src={pad.url} preload="auto"></audio>
